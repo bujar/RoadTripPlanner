@@ -1,22 +1,36 @@
 import requests
 from django.shortcuts import render
 import json
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def getHotels(request):
-	latitude = request.POST['latitude']
-	longitude = request.POST['longitude']
-	checkin = request.POST['checkin']
-	checkout = str(int(checkin) + 1);
+	total_distance = 0.0
 	price = []
 	hotelName = []
 	hotelId = []
-	url = "http://www.priceline.com/api/hotelretail/listing/v3/" + latitude + "," + longitude + "/" + checkin + "/" + checkout + "/1/20"
-	data = requests.get(url).json()
-	for hotel in  data['priceSorted']:
-		hotelId.append(hotel)
-		hotelName.append(data['hotels'][hotel]['hotelName'])
-	url = "http://www.priceline.com/pws/v0/stay/retail/listing/detail/" + hotelId[0] + "?check-in=" + checkin + "&check-out=" + checkout
-	data = requests.get(url).json()
+	encoded_json = request.body.decode(encoding='UTF-8')
+	data = json.loads(encoded_json)
+	for location in data['data']:
+		total_distance = total_distance + int(location['distance'])
+		print(total_distance)
+		latitude = location['coordinates'][0]
+		longitude = location['coordinates'][1]
 
-	price = data['hotel']['rooms'][0]['displayableRates'][0]['originalRates'][0]['nativeTotalPriceIncludingTaxesAndFeePerStay']
+		url = "http://www.priceline.com/api/hotelretail/listing/v3/" + latitude + "," + longitude + "/" + checkin + "/" + checkout + "/1/20"
+		data = requests.get(url).json()
+		for hotel in  data['priceSorted']:
+			hotelId.append(hotel)
+			hotelName.append(data['hotels'][hotel]['hotelName'])
+		url = "http://www.priceline.com/pws/v0/stay/retail/listing/detail/" + hotelId[0] + "?check-in=" + checkin + "&check-out=" + checkout
+		data = requests.get(url).json()
+
+		price.append(data['hotel']['rooms'][0]['displayableRates'][0]['originalRates'][0]['nativeTotalPriceIncludingTaxesAndFeePerStay'])
 	context = {'price': price, 'name': hotelName[0]}
 	return render(request, 'itinerary.html', context)
+
+def results(request):
+	start = request.POST['start']
+	destination = request.POST['destination']
+	context = {'start': start, 'destination': destination}
+	return render(request, 'result.html', context)

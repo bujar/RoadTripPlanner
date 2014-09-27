@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Carousel Template for Bootstrap</title>
+    <title>Road Trip Planner</title>
 
     <!-- Bootstrap core CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -45,14 +45,16 @@
             </font>
             <br><br>
 
-<form role="form">
+<form method="post" action="trip/results" role="form">
   <div class="form-group">
     <center>
-    <input type="text" style="width:500px; height:50px;" class="form-control" id="start" placeholder="Starting Location">
+    <input type="text" style="width:500px; height:50px;" class="form-control" name="start" placeholder="Starting Location">
     <br>
-    <input type="text" style="width:500px; height:50px;" class="form-control" id="destination" placeholder="Destination">
+    <input type="text" style="width:500px; height:50px;" class="form-control" name="destination" placeholder="Destination">
     <br>
-                  <p><a class="btn btn-lg btn-primary" href="#" role="button">Plan Your Trip!</a></p>
+                  <p><input type="submit" class="btn btn-lg btn-primary" href="#" role="button" value="Plan Your Trip!"></input></p>
+                  {% csrf_token %}
+                </form>
 </center>
   </div>            </div>
           </div>
