@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form action="/trip/itinerary" method="post">
+  Latitude <input type="text" name="latitude"><br>
+  Longitude <input type="text" name="longitude"><br>
+  Check in Date <input type="number" name="checkin"><br>
+  <input type="submit" value="Submit">
+  	{% csrf_token %}
+</form>
+
+</body>
+</html>
