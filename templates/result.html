@@ -84,7 +84,7 @@
       function calcRoute() {
           var start = "{{start}}"
           var end = "{{destination}}";
-
+          var date = document.getElementById("checkin").value;
           var request = {
               origin: start,
               destination: end,
@@ -99,7 +99,7 @@
               $.ajax({
                   url: 'itinerary',
                   type: 'POST',
-                  data: JSON.stringify({data: possible_stops}),
+                  data: JSON.stringify({data: possible_stops, date: checkin}),
                   dataType: 'json'                });
               }
           });
@@ -108,11 +108,12 @@
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
-  <body onload="calcRoute();">
+  <body>
     <h1>{{start}}</h1>
     <h1>{{destination}}</h1>
 
-
 <div id="map-canvas"></div>
+
+    <input type="date" id="checkin" onChange="calcRoute()">
   </body>
 </html>

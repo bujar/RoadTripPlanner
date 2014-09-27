@@ -11,11 +11,12 @@ def getHotels(request):
 	hotelId = []
 	encoded_json = request.body.decode(encoding='UTF-8')
 	data = json.loads(encoded_json)
+	print(data)
 	for location in data['data']:
 		total_distance = total_distance + int(location['distance'])
 		print(total_distance)
-		latitude = location['coordinates'][0]
-		longitude = location['coordinates'][1]
+		latitude = str(location['coordinates'][0])
+		longitude = str(location['coordinates'][1])
 
 		url = "http://www.priceline.com/api/hotelretail/listing/v3/" + latitude + "," + longitude + "/" + checkin + "/" + checkout + "/1/20"
 		data = requests.get(url).json()
@@ -26,6 +27,8 @@ def getHotels(request):
 		data = requests.get(url).json()
 
 		price.append(data['hotel']['rooms'][0]['displayableRates'][0]['originalRates'][0]['nativeTotalPriceIncludingTaxesAndFeePerStay'])
+	for p in price:
+		print(p)
 	context = {'price': price, 'name': hotelName[0]}
 	return render(request, 'itinerary.html', context)
 
