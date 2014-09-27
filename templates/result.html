@@ -95,7 +95,7 @@
 
               // send
               $.ajax({
-                  url: 'http://127.0.0.1/itinerary.php',
+                  url: '/itinerary',
                   type: 'POST',
                   data: JSON.stringify({data: possible_stops}),
                   dataType: 'json'                });
