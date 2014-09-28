@@ -9,27 +9,37 @@ def getHotels(request):
 	price = []
 	hotelName = []
 	hotelId = []
+	starRating = []
+	names = []
+	city = []
+	dates = []
 	encoded_json = request.body.decode(encoding='UTF-8')
-	data = json.loads(encoded_json)
-	print(data)
-	for location in data['data']:
+	json_data = json.loads(encoded_json)
+	checkin = int(json_data['date'].replace("-", "")) + 1
+	for location in json_data['data'][1:]:
 		total_distance = total_distance + int(location['distance'])
-		print(total_distance)
+
 		latitude = str(location['coordinates'][0])
 		longitude = str(location['coordinates'][1])
 
-		url = "http://www.priceline.com/api/hotelretail/listing/v3/" + latitude + "," + longitude + "/" + checkin + "/" + checkout + "/1/20"
+		url = "http://www.priceline.com/api/hotelretail/listing/v3/" + latitude + "," + longitude + "/" + str(checkin) + "/" + str(checkin+1) + "/1/20"
 		data = requests.get(url).json()
 		for hotel in  data['priceSorted']:
-			hotelId.append(hotel)
-			hotelName.append(data['hotels'][hotel]['hotelName'])
-		url = "http://www.priceline.com/pws/v0/stay/retail/listing/detail/" + hotelId[0] + "?check-in=" + checkin + "&check-out=" + checkout
-		data = requests.get(url).json()
+			url = "http://www.priceline.com/pws/v0/stay/retail/listing/detail/" + hotel + "?check-in=" + str(checkin) + "&check-out=" + str(checkin+1)
+			data = requests.get(url).json()
+			try:
+				price.append(data['hotel']['rooms'][0]['displayableRates'][0]['originalRates'][0]['nativeTotalPriceIncludingTaxesAndFeePerStay'])
+				names.append(data['hotel']['name'])
+				starRating.append(data['hotel']['starRating'])
+				city.append(data['hotel']['location']['address']['cityName'])
+				dates.append(checkin)
+				break
+			except KeyError:
+				continue
+		checkin = checkin+1
 
-		price.append(data['hotel']['rooms'][0]['displayableRates'][0]['originalRates'][0]['nativeTotalPriceIncludingTaxesAndFeePerStay'])
-	for p in price:
-		print(p)
-	context = {'price': price, 'name': hotelName[0]}
+	zipped = zip(names, price, city, starRating, dates)
+	context = {'zipped': zipped}
 	return render(request, 'itinerary.html', context)
 
 def results(request):
