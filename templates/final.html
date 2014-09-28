@@ -37,16 +37,19 @@
 
     #results h1{margin-top: 5px;}
 
-    #results h2{
+    .city{
       background: url(../static/img/location.png) left center no-repeat;
+      padding: 0 0 0 20px;
     }
 
-    #results h3{
+    .price{
      background: url(../static/img/money.png) left center no-repeat;
+     padding: 0 0 0 20px;
     }
     
-    #results #date{
+    .date{
      background: url(../static/img/date.png) left center no-repeat;
+     padding: 0 0 0 20px;
     }
 
     #results{ border: 1px solid gray; border-radius: 5px; margin-top: 10px; background: -webkit-linear-gradient(top, #eee, white);}
@@ -77,7 +80,7 @@
      float: right;
     }
 
-    .news img{
+    .news img .border{
      float: left;
      margin: 0 0.7em 0.5em 0;
      padding: 4px;
@@ -208,19 +211,19 @@
     <br><br>
 
 		{% for hotel, price, city, starRating, dates, image in zipped %}
-		        <div class="news clearfix">
+		        <div class="news clearfix" style="text-align: left;">
                 <div class="kopf">
+                    <div><img src="../static/img/star-{{starRating}}.png" /></div>
 	                <h2>{{hotel}}</h2>
                 </div>
                 {% if image %}
-                <img src="{{image}}" width='200' height='200' />
+                <img class="border" src="{{image}}" width='200' height='200' />
                 {% else %}
                 <img src="../static/img/hotel_icon.png" width='200px' height='200px' />
                 {% endif %}
-                <img src="../static/img/star-{{starRating}}.png" /><br />
-                <h2>{{city}}</h2><br />
-                <h3>{{price}}</h3><br />
-                <p id="date">{{dates}}</p>
+                <h2 class="city">{{city}}</h2><br />
+                <h3 class="price">{{price}}</h3><br />
+                <p class="date">{{dates}}</p>
                 <br><br>
                 </div> 
             {% endfor %}
