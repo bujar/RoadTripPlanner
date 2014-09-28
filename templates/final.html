@@ -28,28 +28,29 @@
       html, body {margin-left: 5%; margin-right: 5%; padding: 0; background: url(../static/img/cloud.png) repeat-x top left}
       #map-canvas { height: 400px;}
       #results h1,h2,h3, #date {margin: 0;}
-      
-    #results h2, h3, #date{
-     padding: 0 0 0 20px;
-     white-space:nowrap;
-     display:inline-block;
-    }
 
     #results h1{margin-top: 5px;}
 
     .city{
       background: url(../static/img/location.png) left center no-repeat;
       padding: 0 0 0 20px;
+      white-space:nowrap;
+      display:inline-block;
     }
 
     .price{
      background: url(../static/img/money.png) left center no-repeat;
+     background-size: 16px 16px;
      padding: 0 0 0 20px;
+     white-space:nowrap;
+     display:inline-block;
     }
     
     .date{
      background: url(../static/img/date.png) left center no-repeat;
      padding: 0 0 0 20px;
+     white-space:nowrap;
+     display:inline-block;
     }
 
     #results{ border: 1px solid gray; border-radius: 5px; margin-top: 10px; background: -webkit-linear-gradient(top, #eee, white);}
@@ -58,11 +59,11 @@
 
 
     .news{
-     width: 95%;
+     width: 550px;
      border: 1px solid black;
      margin: 1em 0;
      padding: 0.5em 1em;
-     background: #fff url(/images/design/news_bg.gif) top left repeat-x;
+     background: linear-gradient(#e0eef8, #f4fafe);
     }
 
     .news .kopf{
@@ -194,7 +195,7 @@
   </head>
   <body onload="calcRoute()">
   	        <center>
-    <div class="jumbotron">
+    <div class="jumbotron" style="background: linear-gradient(#f4fafe, #e0eef8);">
     <h1>Your Road Trip From</h1>
     <h2>{{start}} to {{destination}}</h2>
         <h3> Total Driving Time: </h3>
