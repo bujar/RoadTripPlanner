@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
+    <title>Road Trip Planner</title>
+
+    <!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="{{ STATIC_URL }}style.css" rel="stylesheet">
     <style type="text/css">
-      html, body {margin-left: 5%; margin-right: 5%; padding: 0;}
+      html, body {margin-left: 5%; margin-right: 5%; padding: 0; background: url(../static/img/cloud.png) repeat-x top left}
       #map-canvas { height: 400px;}
       #results h1,h2,h3, #date {margin: 0;}
       
     #results h2, h3, #date{
-     padding: 0 0 0 16px;
+     padding: 0 0 0 20px;
      white-space:nowrap;
      display:inline-block;
     }
+
+    #results h1{margin-top: 5px;}
 
     #results h2{
       background: url(../static/img/location.png) left center no-repeat;
@@ -24,6 +48,10 @@
     #results #date{
      background: url(../static/img/date.png) left center no-repeat;
     }
+
+    #results{ border: 1px solid gray; border-radius: 5px; margin-top: 10px; background: -webkit-linear-gradient(top, #eee, white);}
+
+    #results img { margin-right: 10px; }
 
 
 	.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
@@ -74,7 +102,10 @@
             distance: 0
           };
           ret[ret.length] = loc_obj;
-
+          var duration = (parseInt(response.routes[0].legs[0].duration.value))/60;
+          var hours = duration/60;
+          var minutes = duration%60;
+          document.getElementById("duration").innerHTML = Math.floor(hours) + " hours " + Math.floor(minutes) + " min";	
           var overview_line = google.maps.geometry.encoding.decodePath(response.routes[0].overview_polyline)
           var this_lat_lng = new google.maps.LatLng(overview_line[0].k, overview_line[0].B);
           last_step = this_lat_lng;
@@ -109,7 +140,7 @@
       function calcRoute() {
           var start = "{{start}}"
           var end = "{{destination}}";
-          var date = document.getElementById("checkin").value;
+          //var date = document.getElementById("checkin").value;
           var request = {
               origin: start,
               destination: end,
@@ -129,12 +160,22 @@
     </script>
   </head>
   <body onload="calcRoute()">
-    <h1>Your Road Trip from</h1>
+  	        <center>
+    <div class="jumbotron">
+    <h1>Your Road Trip From</h1>
     <h2>{{start}} to {{destination}}</h2>
-    <h3>Total cost: ${{totalPrice}}</h3>
+        <h3> Total Driving Time: </h3>
+    <h3 id="duration"></h3>
+    <br>
+        <div id="map-canvas"></div>
+        <br>
+      
 
-    <div id="map-canvas"></div>
-
+    <h2>Estimated Total Cost: ${{total}}</h2>
+    <h3>Cost of Hotels: ${{totalPrice}}</h3>
+    <h3>Cost of Gas: ${{totalGas}}</h3>
+    </div>
+    <br><br>
 
 
 		{% for hotel, price, city, starRating, dates, image in zipped %}
@@ -144,9 +185,8 @@
 		        {% else %}
 		        <img src="../static/img/hotel_icon.png" width='200px' height='200px' style="float:left;" />
 		        {% endif %}
-        <h1>{{hotel}}
-            <!-- <img src="../static/img/star.png" /><img src="../static/img/star.png" /><img src="../static/img/star.png" /> -->
-        </h1>
+        <h1>{{hotel}}</h1>
+        <img src="../static/img/star-{{starRating}}.png" /><br />
         <h2>{{city}}</h2><br />
         <h3>{{price}}</h3><br />
         <p id="date">{{dates}}</p>
