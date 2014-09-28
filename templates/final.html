@@ -24,6 +24,11 @@
     #results #date{
      background: url(../static/img/date.png) left center no-repeat;
     }
+
+
+	.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+	
+    
     </style>
     <link href="../static/style.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -105,8 +110,6 @@
           var start = "{{start}}"
           var end = "{{destination}}";
           var date = document.getElementById("checkin").value;
-          // var duration = response.routes[0].legs[0].duration.value;
-
           var request = {
               origin: start,
               destination: end,
@@ -116,14 +119,8 @@
             if (status == google.maps.DirectionsStatus.OK) {
               directionsDisplay.setDirections(response);
               possible_stops = get_stops(response, 400*1000);
-              document.getElementById("jsondata").value= JSON.stringify({data: possible_stops, date: date, start: "{{start}}", destination: "{{destination}}", })
-              // send
-              // $.ajax({
-              //     url: 'itinerary',
-              //     type: 'POST',
-              //     data: JSON.stringify({data: possible_stops, date: date, start: "{{start}}", destination: "{{destination}}"}),
-              //     dataType: 'json'                
-              // });
+
+             
               }
           });
       }
@@ -132,18 +129,31 @@
     </script>
   </head>
   <body onload="calcRoute()">
-<!--     <h1>Your Road Trip from</h1>
+    <h1>Your Road Trip from</h1>
     <h2>{{start}} to {{destination}}</h2>
-    <h3>Total cost: ${{total}}</h3> -->
+    <h3>Total cost: ${{totalPrice}}</h3>
 
     <div id="map-canvas"></div>
-    <input type="date" id="checkin" onChange="calcRoute()">
-    <form method="post" action='itinerary'>
-      <input type="hidden" id="jsondata" name='data'>
-      <input type="submit" value="submit">
-      {% csrf_token %}      
-    </form>
 
 
+
+		{% for hotel, price, city, starRating, dates, image in zipped %}
+		    <div id="results" style="display:block;" class="results clearfix">
+		    	{% if image %}
+		        <img src="{{image}}" width='200px' height='200px' style="float:left;" />
+		        {% else %}
+		        <img src="../static/img/hotel_icon.png" width='200px' height='200px' style="float:left;" />
+		        {% endif %}
+        <h1>{{hotel}}
+            <!-- <img src="../static/img/star.png" /><img src="../static/img/star.png" /><img src="../static/img/star.png" /> -->
+        </h1>
+        <h2>{{city}}</h2><br />
+        <h3>{{price}}</h3><br />
+        <p id="date">{{dates}}</p>
+        <br><br>
+
+    </div>
+            {% endfor %}
   </body>
 </html>
+
